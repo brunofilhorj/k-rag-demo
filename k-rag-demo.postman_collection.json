@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "b78a4c10-98d2-4e8f-a123-kragsamples01",
+		"name": "K-RAG Demo API",
+		"description": "Collection completa para testes dos endpoints do K-RAG Demo, incluindo consultas RAG e Ingestão/Gestão da Base de Conhecimento.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Perguntas (RAG)",
+			"item": [
+				{
+					"name": "Fazer Pergunta ao Assistente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Quais são os principais conhecimentos e tecnologias presentes na base de conhecimento?\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/questions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"questions"
+							]
+						},
+						"description": "Envia uma pergunta ao assistente RAG. O assistente realiza busca vetorial por similaridade nos documentos da base de conhecimento e responde contextualizado."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Base de Conhecimento (Ingestão & Gestão)",
+			"item": [
+				{
+					"name": "Ingerir Texto Direto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Políticas de Arquitetura de Software\",\n  \"text\": \"A partir de 2026, todas as aplicações backend devem adotar a Arquitetura Hexagonal (Ports and Adapters) com Spring Boot e Kotlin. O banco de dados vetorial deve ser utilizado para armazenar embeddings gerados pelo Ollama.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/documents/text",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"documents",
+								"text"
+							]
+						},
+						"description": "Cadastra um texto bruto como documento na base de conhecimento. O texto será dividido em chunks e indexado com metadados."
+					},
+					"response": []
+				},
+				{
+					"name": "Upload de Arquivo (PDF / TXT / Markdown)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"description": "Selecione um arquivo PDF, TXT ou Markdown."
+								},
+								{
+									"key": "title",
+									"value": "Documentação do Sistema",
+									"type": "text",
+									"description": "Título opcional para o documento. Se omitido, usará o nome do arquivo."
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/documents/upload",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"documents",
+								"upload"
+							]
+						},
+						"description": "Realiza o upload de um arquivo (PDF, TXT ou MD) para ser processado e indexado na base de conhecimento."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Documentos Ingeridos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/documents",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"documents"
+							]
+						},
+						"description": "Retorna a lista de todos os documentos ativos e indexados na base de conhecimento com seus metadados."
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Documento por ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/documents/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"documents",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "digite-o-id-do-documento-aqui",
+									"description": "ID do documento a ser removido (retornado na listagem ou na criação)."
+								}
+							]
+						},
+						"description": "Remove um documento específico e apaga todos os seus vetores/chunks associados da base de conhecimento."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

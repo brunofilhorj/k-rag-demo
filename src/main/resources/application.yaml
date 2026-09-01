@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: k-rag-demo
+
+initial-document:
+  pdf-path: ${user.home}/repos/sample.pdf
+
+ollama:
+  url: http://localhost:11434
+  embedding-model: nomic-embed-text
+  chat-model: llama3.2

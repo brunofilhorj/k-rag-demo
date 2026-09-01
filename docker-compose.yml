@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    # Uncomment the following line to pull the models on startup
+    # command: bash -c "ollama pull nomic-embed-text && ollama pull llama3.2 && ollama serve"
+
+volumes:
+  ollama:
