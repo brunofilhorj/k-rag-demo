@@ -1,5 +1,7 @@
 package com.bfilho.kragdemo.adapter.out.langchain4j
 
+import com.bfilho.kragdemo.adapter.out.langchain4j.prompt.PromptBuilder
+import com.bfilho.kragdemo.adapter.out.langchain4j.prompt.PromptVariant
 import com.bfilho.kragdemo.domain.model.Answer
 import com.bfilho.kragdemo.domain.model.DocumentInfo
 import com.bfilho.kragdemo.domain.model.Question
@@ -29,7 +31,10 @@ class LangChain4jAdapter(
     @Value("\${initial-document.pdf-path:#{null}}") private val pdfPath: String?,
     private val embeddingModel: OllamaEmbeddingModel,
     private val embeddingStore: InMemoryEmbeddingStore<TextSegment>,
-    private val assistant: KnowledgeAssistant
+    private val assistant: KnowledgeAssistant,
+    private val promptBuilder: PromptBuilder,
+    @Value("\${prompt.variant:BASELINE}")
+    private val promptVariant: PromptVariant
 ) : RagEnginePort, KnowledgeBaseStorePort {
 
     private val log = LoggerFactory.getLogger(LangChain4jAdapter::class.java)
@@ -58,7 +63,7 @@ class LangChain4jAdapter(
                 val metadata = Metadata.from(
                     mapOf(
                         "document_id" to docId,
-                        "title" to "Currículo Inicial (PDF)",
+                        "title" to "Initial Document (PDF)",
                         "source_type" to "PDF",
                         "created_at" to createdAt.toString()
                     )
@@ -68,7 +73,7 @@ class LangChain4jAdapter(
 
             val docInfo = DocumentInfo(
                 id = docId,
-                title = "Currículo Inicial (PDF)",
+                title = "Initial Document (PDF)",
                 sourceType = "PDF",
                 createdAt = createdAt,
                 chunkCount = enrichedSegments.size
@@ -129,26 +134,12 @@ class LangChain4jAdapter(
 
         val retrievedTexts = matches.map { match ->
             val segment = match.embedded()
-            val sourceTitle = segment.metadata()?.getString("title") ?: "Desconhecido"
-            "[Fonte: $sourceTitle]\n${segment.text()}"
+            val sourceTitle = segment.metadata()?.getString("title") ?: "Unknown"
+            "[Source: $sourceTitle]\n${segment.text()}"
         }
 
-        // 3. Build context & prompt
-        val context = if (retrievedTexts.isNotEmpty()) {
-            retrievedTexts.joinToString("\n\n---\n\n")
-        } else {
-            "Nenhum contexto relevante foi encontrado na base de conhecimento."
-        }
-
-        val prompt = """
-            CONTEXTO DA BASE DE CONHECIMENTO:
-
-            $context
-
-            PERGUNTA DO USUÁRIO:
-
-            $questionText
-        """.trimIndent()
+        // 3. Build prompt
+        val prompt = promptBuilder.build(retrievedTexts, questionText, promptVariant)
 
         // 4. Call LLM
         val llmResponseText = assistant.chat(prompt)
