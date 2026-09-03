@@ -1,0 +1,35 @@
+[
+  {
+    "id": "hexagonal-architecture",
+    "question": "What is the hexagonal architecture and why is it useful?",
+    "expectedAnswer": "The hexagonal architecture separates business rules from input and output adapters.",
+    "expectedKeywords": [
+      "hexagonal architecture",
+      "business rules",
+      "input",
+      "output",
+      "adapters"
+    ]
+  },
+  {
+    "id": "embedding-model",
+    "question": "Which model is used for embedding text in this project?",
+    "expectedAnswer": "The project uses Ollama with the nomic-embed-text embedding model.",
+    "expectedKeywords": [
+      "ollama",
+      "nomic-embed-text",
+      "embedding model"
+    ]
+  },
+  {
+    "id": "knowledge-base-purpose",
+    "question": "What is the purpose of the knowledge base in this RAG application?",
+    "expectedAnswer": "The knowledge base stores documents and chunks so the system can answer questions using relevant context.",
+    "expectedKeywords": [
+      "knowledge base",
+      "relevant context",
+      "answer questions",
+      "documents"
+    ]
+  }
+]

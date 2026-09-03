@@ -9,3 +9,15 @@ ollama:
   url: http://localhost:11434
   embedding-model: nomic-embed-text
   chat-model: llama3.2
+
+prompt:
+  variant: BASELINE
+  template:
+    user: |
+      CONTEXTO DA BASE DE CONHECIMENTO:
+
+      {{context}}
+
+      PERGUNTA DO USUÁRIO:
+
+      {{question}}
