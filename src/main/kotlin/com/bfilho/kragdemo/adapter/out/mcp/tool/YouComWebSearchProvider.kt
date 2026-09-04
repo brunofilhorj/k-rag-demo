@@ -3,10 +3,8 @@ package com.bfilho.kragdemo.adapter.out.mcp.tool
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class YouComWebSearchProvider(

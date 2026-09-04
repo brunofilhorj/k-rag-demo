@@ -151,7 +151,7 @@ class LangChain4jAdapter(
         // If any external tool returned direct successful summaries, collect them and prefer by priority
         val summaryRegex = Regex("""(?s)Summary:\s*(.*?)(?:\nDetails:|$)""")
 
-        val summariesByTool = externalFactTexts.mapNotNull { (toolName, source, text) ->
+        val summariesByTool = externalFactTexts.mapNotNull { (toolName, _, text) ->
             if (!text.contains("Status: success") || !text.contains("Summary:")) return@mapNotNull null
             val match = summaryRegex.find(text)
             val summary = match?.groups?.get(1)?.value?.trim()
