@@ -22,9 +22,11 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("io.micrometer:micrometer-registry-prometheus:1.11.0")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("dev.langchain4j:langchain4j:0.35.0")
+	implementation("dev.langchain4j:langchain4j:0.35.0")
     implementation("dev.langchain4j:langchain4j-open-ai:0.35.0")
     implementation("dev.langchain4j:langchain4j-google-ai-gemini:0.35.0")
     implementation("dev.langchain4j:langchain4j-ollama:0.35.0")

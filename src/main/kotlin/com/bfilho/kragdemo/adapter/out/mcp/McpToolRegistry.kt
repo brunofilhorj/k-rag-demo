@@ -70,6 +70,24 @@ class McpToolRegistry {
                         "required" to emptyList<String>()
                     )
                 )
+                "election.search" -> McpToolDefinition(
+                    name = name,
+                    description = "Searches for public information about Brazilian elections (summary) using a web source.",
+                    inputSchema = mapOf(
+                        "type" to "object",
+                        "properties" to mapOf(
+                            "query" to mapOf(
+                                "type" to "string",
+                                "description" to "Search phrase, e.g. 'Eleições no Brasil 2022' or a candidate/state name."
+                            ),
+                            "year" to mapOf(
+                                "type" to "string",
+                                "description" to "Optional year to narrow the search."
+                            )
+                        ),
+                        "required" to emptyList<String>()
+                    )
+                )
                 else -> McpToolDefinition(
                     name = name,
                     description = "Executes a custom MCP tool.",

@@ -1,0 +1,107 @@
+<mxfile host="app.diagrams.net" modified="2026-09-04T10:43:00.000Z" agent="Mozilla/5.0" version="24.7.17" type="device">
+  <diagram id="rag-mcp-diagram" name="RAG + MCP">
+    <mxGraphModel dx="1600" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="background"/>
+        <mxCell id="layer1" parent="background"/>
+
+        <mxCell id="title" value="RAG + MCP" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=42;fontStyle=1;fontColor=#1F2A37;" vertex="1" parent="layer1">
+          <mxGeometry x="520" y="20" width="500" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="Contexto local + contexto externo em tempo real antes da resposta final" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontColor=#526378;" vertex="1" parent="layer1">
+          <mxGeometry x="380" y="70" width="780" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="user" value="Usuário&#xa;Pergunta&#xa;“Bruno tem issue?”" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#4D78FF;strokeWidth=2;fontSize=24;fontStyle=1;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="layer1">
+          <mxGeometry x="80" y="180" width="220" height="150" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="kb" value="Knowledge Base" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2DC9B3;strokeWidth=2;fontSize=25;fontStyle=1;align=center;verticalAlign=top;spacingTop=26;" vertex="1" parent="layer1">
+          <mxGeometry x="390" y="130" width="360" height="260" as="geometry"/>
+        </mxCell>
+        <mxCell id="kb_pdf" value="PDFs / docs / notas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBFFF8;strokeColor=#2DC9B3;strokeWidth=1.5;fontSize=20;align=center;verticalAlign=middle;" vertex="1" parent="layer1">
+          <mxGeometry x="440" y="205" width="260" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="kb_emb" value="Embeddings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0F7FF;strokeColor=#75A8FF;strokeWidth=1.5;fontSize=20;align=center;verticalAlign=middle;" vertex="1" parent="layer1">
+          <mxGeometry x="440" y="270" width="260" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="kb_search" value="Busca vetorial" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F9FF;strokeColor=#8EA6DF;strokeWidth=1.5;fontSize=20;align=center;verticalAlign=middle;" vertex="1" parent="layer1">
+          <mxGeometry x="440" y="335" width="260" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="mcp" value="MCP Connector" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#4D78FF;strokeWidth=2;fontSize=25;fontStyle=1;align=center;verticalAlign=top;spacingTop=26;" vertex="1" parent="layer1">
+          <mxGeometry x="830" y="130" width="420" height="260" as="geometry"/>
+        </mxCell>
+        <mxCell id="router" value="ToolIntentRouter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF4FF;strokeColor=#90A8FF;strokeWidth=1.5;fontSize=20;align=center;verticalAlign=middle;" vertex="1" parent="layer1">
+          <mxGeometry x="880" y="210" width="320" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="jira_get" value="jira.get_issue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FBFF;strokeColor=#B9C7F0;strokeWidth=1.5;fontSize=18;align=center;verticalAlign=middle;" vertex="1" parent="layer1">
+          <mxGeometry x="880" y="268" width="320" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="jira_list" value="jira.list_issues" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FBFF;strokeColor=#B9C7F0;strokeWidth=1.5;fontSize=18;align=center;verticalAlign=middle;" vertex="1" parent="layer1">
+          <mxGeometry x="880" y="313" width="320" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="github" value="github.search_prs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FBFF;strokeColor=#B9C7F0;strokeWidth=1.5;fontSize=18;align=center;verticalAlign=middle;" vertex="1" parent="layer1">
+          <mxGeometry x="880" y="358" width="320" height="36" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="jira_box" value="Jira&#xa;issues / status&#xa;owner / workflow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5D7BFF;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="layer1">
+          <mxGeometry x="260" y="500" width="200" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="gh_box" value="GitHub&#xa;PRs / commits&#xa;branches / release" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5D7BFF;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="layer1">
+          <mxGeometry x="510" y="500" width="220" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="api_box" value="APIs / sistemas&#xa;status / saúde&#xa;dados operacionais" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5D7BFF;strokeWidth=2;fontSize=20;fontStyle=1;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="layer1">
+          <mxGeometry x="780" y="500" width="240" height="160" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="llm" value="LLM / Resposta Final" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2DC9B3;strokeWidth=2;fontSize=25;fontStyle=1;align=center;verticalAlign=top;spacingTop=18;" vertex="1" parent="layer1">
+          <mxGeometry x="1120" y="500" width="600" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="prompt" value="Contexto combinado: documentos + fatos do MCP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBFFF8;strokeColor=#2DC9B3;strokeWidth=1.5;fontSize=20;align=center;verticalAlign=middle;" vertex="1" parent="layer1">
+          <mxGeometry x="1160" y="575" width="520" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4D78FF;strokeWidth=3;endArrow=classic;" edge="1" parent="layer1" source="user" target="kb">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4D78FF;strokeWidth=3;endArrow=classic;" edge="1" parent="layer1" source="kb" target="mcp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2DC9B3;strokeWidth=3;endArrow=classic;" edge="1" parent="layer1" source="mcp" target="llm">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arrow4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5D7BFF;strokeWidth=3;endArrow=classic;" edge="1" parent="layer1" source="jira_box" target="gh_box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5D7BFF;strokeWidth=3;endArrow=classic;" edge="1" parent="layer1" source="gh_box" target="api_box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5D7BFF;strokeWidth=3;endArrow=classic;" edge="1" parent="layer1" source="api_box" target="llm">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5D7BFF;strokeWidth=3;endArrow=classic;" edge="1" parent="layer1" source="mcp" target="jira_box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="label1" value="RAG local" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#3F536D;" vertex="1" parent="layer1">
+          <mxGeometry x="300" y="215" width="90" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="label2" value="Fatos externos" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#3F536D;" vertex="1" parent="layer1">
+          <mxGeometry x="760" y="215" width="120" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="label3" value="Prompt final" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#3F536D;" vertex="1" parent="layer1">
+          <mxGeometry x="1180" y="475" width="120" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="label4" value="live tools" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#3F536D;" vertex="1" parent="layer1">
+          <mxGeometry x="600" y="690" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="footer" value="Resultado&#xa;O modelo responde com base em:&#xa;documentos indexados + dados atuais de Jira/GitHub/APIs&#xa;sem perder a base de conhecimento local, mas ganhando contexto em tempo real" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#CAD6EA;strokeWidth=2;fontSize=20;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="layer1">
+          <mxGeometry x="120" y="760" width="1550" height="210" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
