@@ -28,7 +28,7 @@ class InternetSearchService(
         get() = props.ttlMs
 
     private fun counter(name: String, target: String) =
-        meterRegistry.counter(name, listOf(io.micrometer.core.instrument.Tags.of("target", target)))
+        meterRegistry.counter(name, io.micrometer.core.instrument.Tags.of("target", target))
 
     fun fetchFromTargets(title: String, targets: List<String>? = null): Map<String, String?> {
         val chosen = targets ?: props.defaultTargets
@@ -132,13 +132,7 @@ class InternetSearchService(
         val names = listOf("internet.search.requests", "internet.search.cache_hits", "internet.search.cache_misses", "internet.search.failures")
         val summary = mutableMapOf<String, Map<String, Double>>()
 
-        // collect per-target counts by reading meters
-        val targets = mutableSetOf<String>()
-        for (m in meterRegistry.registryMeters) {
-            // no-op: placeholder
-        }
-
-        // simpler approach: query meters with tag 'target'
+        // query meters with tag 'target'
         val targetsSeen = mutableSetOf<String>()
         meterRegistry.meters.forEach { meter ->
             val targetTag = meter.id.tags.firstOrNull { it.key == "target" }?.value

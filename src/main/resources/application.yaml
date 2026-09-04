@@ -20,6 +20,22 @@ mcp:
     - system.status
   timeout-ms: 5000
 
+internet:
+  search:
+    ttl-ms: 600000 # 10 minutes
+    default-targets:
+      - wikipedia
+    default-language: pt
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,metrics"
+  endpoint:
+    prometheus:
+      enabled: true
+
 prompt:
   variant: BASELINE
   template:
