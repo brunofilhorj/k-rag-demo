@@ -5,8 +5,6 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
-import org.springframework.boot.gradle.tasks.run.BootRun
-
 group = "com.bfilho"
 version = "0.0.1-SNAPSHOT"
 description = "k-rag-demo"
@@ -53,7 +51,7 @@ tasks.withType<Test> {
 
 // Load .env.local into the environment when running bootRun so local env vars like YOU_COM_API_KEY are available
 
-tasks.named<BootRun>("bootRun") {
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
     doFirst {
         val envFile = file(".env.local")
         if (envFile.exists()) {
