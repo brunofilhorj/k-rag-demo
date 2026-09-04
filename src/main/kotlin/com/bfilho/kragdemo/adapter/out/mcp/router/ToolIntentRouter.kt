@@ -26,6 +26,11 @@ class ToolIntentRouter {
             )
         }
 
+        val internetDecision = decideInternetSearch(trimmed)
+        if (internetDecision != null) {
+            decisions += internetDecision
+        }
+
         if (shouldInvokeSystemStatus(trimmed)) {
             decisions += McpToolDecision(
                 toolName = "system.status",
@@ -101,6 +106,42 @@ class ToolIntentRouter {
         val normalized = question.lowercase()
         val githubPatterns = listOf("pr", "pull request", "pull-request", "branch", "commit", "release", "merge")
         return githubPatterns.any { normalized.contains(it) }
+    }
+
+    private fun decideInternetSearch(question: String): McpToolDecision? {
+        val normalized = question.lowercase()
+        val searchVerbs = listOf("busca", "buscar", "busque", "pesquise", "pesquisar", "procure", "encontre")
+        val hasSearch = searchVerbs.any { normalized.contains(it) }
+        if (!hasSearch) return null
+
+        val targets = mutableListOf<String>()
+        if (normalized.contains("google") || normalized.contains("web")) targets += "web"
+        if (normalized.contains("wikipedia") || normalized.contains("wiki")) targets += "wikipedia"
+        if (normalized.contains("site") || normalized.contains("site:")) targets += "url"
+
+        if (targets.isEmpty()) targets += "wikipedia"
+
+        val query = extractSearchQuery(question)
+
+        return McpToolDecision(
+            toolName = "election.search",
+            arguments = mapOf(
+                "query" to query,
+                "targets" to targets
+            )
+        )
+    }
+
+    private fun extractSearchQuery(question: String): String {
+        val lowered = question.lowercase()
+        val cleaned = lowered
+            .replace(Regex("(busca|buscar|busque|pesquise|pesquisar|procure|encontre)"), "")
+            .replace(Regex("(google|wikipedia|wiki|site|site:)"), "")
+            .replace(Regex("[^a-z0-9\\sçãõáàéíóú-]"), " ")
+            .split(Regex("\\s+"))
+            .filter { it.isNotBlank() }
+            .joinToString(" ")
+        return if (cleaned.isBlank()) question.trim() else cleaned.trim()
     }
 
     private fun shouldInvokeSystemStatus(question: String): Boolean {
