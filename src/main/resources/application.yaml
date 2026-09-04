@@ -18,6 +18,7 @@ mcp:
     - jira.list_issues
     - github.search_prs
     - system.status
+    - election.search
   timeout-ms: 5000
 
 internet:
@@ -26,6 +27,12 @@ internet:
     default-targets:
       - wikipedia
     default-language: pt
+    user-agent: "k-rag-demo/1.0 (+https://github.com/brunofilhorj/k-rag-demo)"
+    youcom:
+      api-key: "${YOU_COM_API_KEY:}"
+      max-results: 5
+      language: pt-BR
+      country: BR
 
 management:
   endpoints:

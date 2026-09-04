@@ -10,4 +10,18 @@ class InternetSearchProperties {
     var defaultTargets: List<String> = listOf("wikipedia")
     // default language for searches (used for wikipedia, etc.)
     var defaultLanguage: String = "pt"
+
+    // User-Agent header to use when scraping web targets
+    var userAgent: String = "k-rag-demo/1.0 (+https://github.com/brunofilhorj/k-rag-demo)"
+
+    // You.com configuration
+    var youcom: YouComProperties = YouComProperties()
+
+    data class YouComProperties(
+        var apiKey: String = "",
+        var maxResults: Int = 5,
+        var language: String = "pt-BR",
+        var country: String = "BR"
+    )
 }
+
