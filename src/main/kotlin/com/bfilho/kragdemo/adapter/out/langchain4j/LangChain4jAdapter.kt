@@ -5,6 +5,7 @@ import com.bfilho.kragdemo.adapter.out.langchain4j.prompt.PromptVariant
 import com.bfilho.kragdemo.domain.model.Answer
 import com.bfilho.kragdemo.domain.model.DocumentInfo
 import com.bfilho.kragdemo.domain.model.Question
+import com.bfilho.kragdemo.domain.port.out.ExternalContextPort
 import com.bfilho.kragdemo.domain.port.out.KnowledgeBaseStorePort
 import com.bfilho.kragdemo.domain.port.out.RagEnginePort
 import dev.langchain4j.data.document.Metadata
@@ -33,6 +34,7 @@ class LangChain4jAdapter(
     private val embeddingStore: InMemoryEmbeddingStore<TextSegment>,
     private val assistant: KnowledgeAssistant,
     private val promptBuilder: PromptBuilder,
+    private val externalContextPort: ExternalContextPort,
     @Value("\${prompt.variant:BASELINE}")
     private val promptVariant: PromptVariant
 ) : RagEnginePort, KnowledgeBaseStorePort {
@@ -132,10 +134,15 @@ class LangChain4jAdapter(
         val matches = embeddingStore.search(searchRequest).matches()
         log.info("Retrieved {} relevant chunks from store", matches.size)
 
-        val retrievedTexts = matches.map { match ->
+        val localRetrievedTexts = matches.map { match ->
             val segment = match.embedded()
             val sourceTitle = segment.metadata()?.getString("title") ?: "Unknown"
             "[Source: $sourceTitle]\n${segment.text()}"
+        }
+
+        val externalContext = externalContextPort.fetch(questionText)
+        val retrievedTexts = localRetrievedTexts + externalContext.map { fact ->
+            "[External source: ${fact.source}]\n${fact.content}"
         }
 
         // 3. Build prompt
