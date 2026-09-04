@@ -24,28 +24,45 @@ class YouComWebSearchProvider(
         }
 
         return try {
-            // Build request according to You.com API (common pattern: Authorization: Bearer <key>)
             val headers = HttpHeaders().apply {
-                add("Authorization", "Bearer $apiKey")
+                add("X-API-Key", apiKey)
                 add("User-Agent", props.userAgent)
+                add("Content-Type", "application/json")
                 add("Accept", "application/json")
             }
 
-            val encoded = java.net.URLEncoder.encode(query, "UTF-8")
-            val url = "https://api.you.com/search?q=$encoded&num=$maxResults&locale=${language ?: props.youcom.language}"
+            // Build request body according to ydc-index API example
+            val body = mutableMapOf<String, Any>("query" to query)
+            // prefer explicit extraction highlights
+            body["extraction"] = mapOf("extraction_mode" to "highlights")
+            if (maxResults > 0) body["num_results"] = maxResults
 
-            val entity = HttpEntity<String>(headers)
-            val response = restTemplate.exchange(url, HttpMethod.GET, entity, YouComSearchResponse::class.java)
+            val resolvedLanguage = (language ?: props.youcom.language).takeIf { it.isNotBlank() }
+            if (resolvedLanguage != null) body["language"] = resolvedLanguage
+
+            val resolvedCountry = props.youcom.country.takeIf { it.isNotBlank() }
+            if (resolvedCountry != null) body["country"] = resolvedCountry
+
+            val entity = HttpEntity(body, headers)
+            val response = restTemplate.postForEntity("https://ydc-index.io/v1/search", entity, YouComSearchResponse::class.java)
             val resp = response.body
 
-            val items = resp?.results.orEmpty()
-            return items.mapNotNull { item ->
-                val title = item.title ?: item.url ?: "(no title)"
-                val url = item.url ?: ""
-                val snippet = item.snippet ?: item.highlights?.firstOrNull() ?: item.content?.take(300) ?: ""
-                val content = item.content
-                if (snippet.isBlank() && content.isNullOrBlank()) null else SearchResult(title = title, url = url, snippet = snippet, content = content)
-            }.take(maxResults)
+            val resultsMap = resp?.results ?: emptyMap()
+            val rawItems = resultsMap.values.flatten()
+            val mapped = rawItems.mapNotNull { raw ->
+                val title = raw.title ?: raw.url ?: "(no title)"
+                val url = raw.url ?: ""
+                val highlights = raw.contents?.highlights ?: emptyList()
+
+                // join highlights into a cleaner content snippet: strip markdown headers and compress whitespace
+                val rawContent = if (highlights.isNotEmpty()) highlights.joinToString("\n\n") else (raw.description ?: "")
+                val cleaned = rawContent.replace(Regex("(?m)^#+\\s*"), "").replace(Regex("\\s{2,}"), " ").trim()
+                val snippet = if (cleaned.length > 400) cleaned.substring(0, 400) + "..." else cleaned
+
+                if (snippet.isBlank() && cleaned.isBlank()) null else SearchResult(title = title, url = url, snippet = snippet, content = cleaned)
+            }
+            val limit = if (maxResults > 0) maxResults else props.youcom.maxResults
+            return mapped.take(limit)
         } catch (e: Exception) {
             log.warn("YouComWebSearchProvider.search failed for '{}': {}", query, e.message)
             emptyList()

@@ -141,8 +141,45 @@ class LangChain4jAdapter(
         }
 
         val externalContext = externalContextPort.fetch(questionText)
-        val retrievedTexts = localRetrievedTexts + externalContext.map { fact ->
-            "[External source: ${fact.source}]\n${fact.content}"
+        // keep structured facts so we know the tool/title that produced each fact
+        val externalFactTexts = externalContext.map { fact ->
+            Triple(fact.title, fact.source, "[External source: ${fact.source}]\n${fact.content}")
+        }
+
+        val retrievedTexts = localRetrievedTexts + externalFactTexts.map { it.third }
+
+        // If any external tool returned direct successful summaries, collect them and prefer by priority
+        val summaryRegex = Regex("""(?s)Summary:\s*(.*?)(?:\nDetails:|$)""")
+
+        val summariesByTool = externalFactTexts.mapNotNull { (toolName, source, text) ->
+            if (!text.contains("Status: success") || !text.contains("Summary:")) return@mapNotNull null
+            val match = summaryRegex.find(text)
+            val summary = match?.groups?.get(1)?.value?.trim()
+            summary?.takeIf { it.isNotBlank() }?.let { toolName to it }
+        }
+
+        var toolDirectAnswer: String? = null
+        if (summariesByTool.isNotEmpty()) {
+            // Prefer election.search explicitly
+            val election = summariesByTool.firstOrNull { it.first.equals("election.search", ignoreCase = true) }
+            if (election != null) {
+                toolDirectAnswer = election.second
+            } else {
+                // fallback: prefer web-related tools
+                val webPref = summariesByTool.firstOrNull { (tool, _) ->
+                    tool.contains("web", ignoreCase = true) || tool.contains("wiki", ignoreCase = true) || tool.contains("search", ignoreCase = true)
+                }
+                toolDirectAnswer = webPref?.second ?: summariesByTool.maxByOrNull { it.second.length }?.second
+            }
+        }
+
+        if (toolDirectAnswer != null) {
+            // Return early using the selected tool's answer to avoid LLM hallucination
+            return Answer(
+                question = questionText,
+                text = toolDirectAnswer,
+                retrievedChunks = retrievedTexts
+            )
         }
 
         // 3. Build prompt
