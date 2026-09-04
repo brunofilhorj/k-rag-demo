@@ -20,9 +20,21 @@ class PromptBuilder(
         }
 
         val template = when (variant) {
-            PromptVariant.BASELINE -> userTemplate
+            PromptVariant.BASELINE -> """
+                Use the context below as the source of truth.
+                If the context contains a direct answer from a tool, external system, or retrieved document, answer directly from it.
+                Do not say you lack information when the answer is already present in the context.
+                If the context does not contain the answer, say the information is not available in the knowledge base.
+
+                CONTEXTO:
+                {{context}}
+
+                PERGUNTA:
+                {{question}}
+            """.trimIndent()
             PromptVariant.GROUNDED_ONLY -> """
                 Use only the information available in the context below.
+                If the context includes a direct tool response or factual result, use it as the answer source.
                 Do not invent facts. If the answer is not present in the context, say that the information is not available in the knowledge base.
 
                 CONTEXT:
@@ -33,6 +45,7 @@ class PromptBuilder(
             """.trimIndent()
             PromptVariant.CONCISE_ANSWER -> """
                 Answer using only the provided context and keep the answer concise.
+                If the context contains a direct tool result or factual data, answer directly from it.
                 If the context does not contain the answer, say so clearly.
 
                 CONTEXT:

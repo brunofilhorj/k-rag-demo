@@ -10,14 +10,29 @@ ollama:
   embedding-model: nomic-embed-text
   chat-model: llama3.2
 
+mcp:
+  enabled: true
+  server-url: http://localhost:8080
+  tools:
+    - jira.get_issue
+    - jira.list_issues
+    - github.search_prs
+    - system.status
+  timeout-ms: 5000
+
 prompt:
   variant: BASELINE
   template:
     user: |
-      CONTEXTO DA BASE DE CONHECIMENTO:
+      Use the context below as the source of truth.
+      If the context contains a direct answer from a tool, external system, or retrieved document, answer directly from it.
+      Do not say you lack information when the answer is already present in the context.
+      If the context does not contain the answer, say the information is not available in the knowledge base.
+
+      CONTEXT:
 
       {{context}}
 
-      PERGUNTA DO USUÁRIO:
+      QUESTION:
 
       {{question}}
