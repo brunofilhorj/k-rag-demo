@@ -31,24 +31,20 @@ class YouComWebSearchProvider(
                 add("Accept", "application/json")
             }
 
-            val uri = UriComponentsBuilder.fromHttpUrl("https://api.you.com/search")
-                .queryParam("q", query)
-                .queryParam("num", maxResults)
-                .queryParam("locale", language ?: props.youcom.language)
-                .build()
-                .toUri()
+            val encoded = java.net.URLEncoder.encode(query, "UTF-8")
+            val url = "https://api.you.com/search?q=$encoded&num=$maxResults&locale=${language ?: props.youcom.language}"
 
             val entity = HttpEntity<String>(headers)
-            val resp = restTemplate.exchange(uri, HttpMethod.GET, entity, YouComSearchResponse::class.java).body
+            val response = restTemplate.exchange(url, HttpMethod.GET, entity, YouComSearchResponse::class.java)
+            val resp = response.body
 
             val items = resp?.results.orEmpty()
-            items.mapNotNull { item ->
+            return items.mapNotNull { item ->
                 val title = item.title ?: item.url ?: "(no title)"
                 val url = item.url ?: ""
                 val snippet = item.snippet ?: item.highlights?.firstOrNull() ?: item.content?.take(300) ?: ""
                 val content = item.content
-                if (snippet.isBlank() && content.isNullOrBlank()) return@mapNotNull null
-                SearchResult(title = title, url = url, snippet = snippet, content = content)
+                if (snippet.isBlank() && content.isNullOrBlank()) null else SearchResult(title = title, url = url, snippet = snippet, content = content)
             }.take(maxResults)
         } catch (e: Exception) {
             log.warn("YouComWebSearchProvider.search failed for '{}': {}", query, e.message)
