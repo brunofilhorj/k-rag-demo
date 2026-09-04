@@ -5,6 +5,8 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 group = "com.bfilho"
 version = "0.0.1-SNAPSHOT"
 description = "k-rag-demo"
@@ -47,4 +49,28 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+// Load .env.local into the environment when running bootRun so local env vars like YOU_COM_API_KEY are available
+
+tasks.named<BootRun>("bootRun") {
+    doFirst {
+        val envFile = file(".env.local")
+        if (envFile.exists()) {
+            val lines = envFile.readLines()
+            val envMap = lines.mapNotNull { raw ->
+                val line = raw.trim()
+                if (line.isBlank() || line.startsWith("#")) return@mapNotNull null
+                val idx = line.indexOf('=')
+                if (idx <= 0) return@mapNotNull null
+                val key = line.substring(0, idx).trim()
+                val value = line.substring(idx + 1)
+                key to value
+            }.toMap()
+
+            // Copy into the Gradle task environment map
+            environment.putAll(envMap)
+            println("Loaded ${envMap.size} entries from .env.local into bootRun environment")
+        }
+    }
 }
